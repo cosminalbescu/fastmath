@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fastmath-cosmin"
-version = "0.1.0"
+version = "0.1.1"
 description = "Fast numeric operations with a C extension and a Python fallback"
 readme = "README.md"
 requires-python = ">=3.9"
