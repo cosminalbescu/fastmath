@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fastmath-cosmin"
+version = "0.1.0"
+description = "Fast numeric operations with a C extension and a Python fallback"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+authors = [{ name = "Cosmin Albescu" }]
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[[tool.setuptools.ext-modules]]
+name = "fastmath._core"
+sources = ["src/fastmath/_core.c"]

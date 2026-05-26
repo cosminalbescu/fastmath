@@ -1,0 +1,9 @@
+README.md
+pyproject.toml
+src/fastmath/__init__.py
+src/fastmath/_core.c
+src/fastmath/_pyfallback.py
+src/fastmath_cosmin.egg-info/PKG-INFO
+src/fastmath_cosmin.egg-info/SOURCES.txt
+src/fastmath_cosmin.egg-info/dependency_links.txt
+src/fastmath_cosmin.egg-info/top_level.txt
