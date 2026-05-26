@@ -26,13 +26,17 @@ jobs:
             python -c "import fastmath; assert fastmath.sum_list([1.0,2.0,3.0]) == 6.0; print('OK', fastmath.backend())"
       - name: Build sdist
         run: pipx run build --sdist
+      - name: Collect distributions
+        run: |
+          mkdir -p collected
+          cp wheelhouse/*.whl collected/
+          cp dist/*.tar.gz collected/
+          ls -la collected/
       - name: Upload distributions as artifact
         uses: actions/upload-artifact@v4
         with:
           name: distributions
-          path: |
-            wheelhouse/*.whl
-            dist/*.tar.gz
+          path: collected/
 
   publish:
     name: Publish to TestPyPI
@@ -47,11 +51,8 @@ jobs:
         with:
           name: distributions
           path: dist/
-      - name: Flatten dist directory
-        run: |
-          find dist -name '*.whl' -exec mv {} dist/ \;
-          find dist -name '*.tar.gz' -exec mv {} dist/ \;
-          ls -la dist/
+      - name: List files to publish
+        run: ls -la dist/
       - name: Publish to TestPyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
