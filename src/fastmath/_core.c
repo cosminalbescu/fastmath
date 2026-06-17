@@ -1,8 +1,8 @@
-/* _core.c — extensie C pentru fastmath */
+/* _core.c — C extension for fastmath */
 #define PY_SSIZE_T_CLEAN
 #include <Python.h>
 
-/* Suma elementelor unei liste de numere */
+/* Sum the elements of a list of numbers */
 static PyObject *sum_list(PyObject *self, PyObject *args) {
     PyObject *list;
     if (!PyArg_ParseTuple(args, "O", &list))
@@ -17,7 +17,7 @@ static PyObject *sum_list(PyObject *self, PyObject *args) {
     return PyFloat_FromDouble(total);
 }
 
-/* Produs scalar (dot product) a două liste */
+/* Dot product of two lists */
 static PyObject *dot(PyObject *self, PyObject *args) {
     PyObject *a, *b;
     if (!PyArg_ParseTuple(args, "OO", &a, &b))
@@ -36,23 +36,23 @@ static PyObject *dot(PyObject *self, PyObject *args) {
     return PyFloat_FromDouble(result);
 }
 
-/* Tabelul de metode expuse în Python */
+/* Dot product of two lists */
 static PyMethodDef Methods[] = {
     {"sum_list", sum_list, METH_VARARGS, "Sum of a list of numbers."},
     {"dot",      dot,      METH_VARARGS, "Dot product of two lists."},
     {NULL, NULL, 0, NULL}   /* terminator */
 };
 
-/* Definiția modulului */
+/* Module definition */
 static struct PyModuleDef moduledef = {
     PyModuleDef_HEAD_INIT,
-    "_core",            /* numele modulului */
+    "_core",            /* module name */
     "fastmath C core",  /* docstring */
     -1,
     Methods
 };
 
-/* Funcția de init — numele TREBUIE să fie PyInit_<nume modul> */
+/* Initialization function — the name MUST be PyInit_<module name> */
 PyMODINIT_FUNC PyInit__core(void) {
     return PyModule_Create(&moduledef);
 }
