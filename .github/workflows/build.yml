@@ -1,5 +1,7 @@
+# GitHub Actions workflow that builds wheels/sdist and publishes to TestPyPI on release.
 name: Build and Publish
 
+# Run validation on pushes and pull requests, and publish only when a GitHub release is created.
 on:
   push:
     branches: [master]
@@ -7,7 +9,9 @@ on:
   release:
     types: [published]
 
+# CI/CD jobs for building package artifacts and publishing them.
 jobs:
+  # Build job: creates manylinux wheels and a source distribution.
   build-wheels:
     name: Build manylinux wheels
     runs-on: ubuntu-latest
@@ -17,32 +21,41 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+        # Build wheels for multiple CPython versions using cibuildwheel.
       - name: Build wheels with cibuildwheel
         uses: pypa/cibuildwheel@v2.21
         env:
+          # Target CPython 3.11, 3.12 and 3.13 wheels.
           CIBW_BUILD: "cp311-* cp312-* cp313-*"
+          # Build Linux x86_64 wheels.
           CIBW_ARCHS_LINUX: "x86_64"
+          # Smoke-test each built wheel by importing fastmath and checking sum_list.          
           CIBW_TEST_COMMAND: >
             python -c "import fastmath; assert fastmath.sum_list([1.0,2.0,3.0]) == 6.0; print('OK', fastmath.backend())"
+      # Build the source distribution separately.
       - name: Build sdist
         run: pipx run build --sdist
+      # Collect wheels and sdist into one folder for upload.
       - name: Collect distributions
         run: |
           mkdir -p collected
           cp wheelhouse/*.whl collected/
           cp dist/*.tar.gz collected/
           ls -la collected/
+      # Store built artifacts so the publish job can download them later.
       - name: Upload distributions as artifact
         uses: actions/upload-artifact@v4
         with:
           name: distributions
           path: collected/
 
+  # Publish job: runs only for GitHub releases and uploads artifacts to TestPyPI.
   publish:
     name: Publish to TestPyPI
     needs: build-wheels
     runs-on: ubuntu-latest
     if: github.event_name == 'release'
+    # Required for OIDC trusted publishing, avoiding long-lived PyPI tokens.
     permissions:
       id-token: write
     steps:
@@ -53,6 +66,7 @@ jobs:
           path: dist/
       - name: List files to publish
         run: ls -la dist/
+      # Publish distributions to TestPyPI using trusted publishing.
       - name: Publish to TestPyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
