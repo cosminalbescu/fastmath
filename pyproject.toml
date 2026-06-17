@@ -1,7 +1,11 @@
+# Build system configuration.
+# Tells pip/build which backend is used to build the package.
 [build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
+# Package metadata.
+# Describes the package name, version, Python requirement, license and author.
 [project]
 name = "fastmath-cosmin"
 version = "0.1.1"
@@ -11,12 +15,18 @@ requires-python = ">=3.9"
 license = "MIT"
 authors = [{ name = "Cosmin Albescu" }]
 
+# Setuptools package layout.
+# Uses the modern src/ layout, so Python package code lives under src/.
 [tool.setuptools]
 package-dir = { "" = "src" }
 
+# Package discovery configuration.
+# Tells setuptools to find Python packages inside the src/ directory.
 [tool.setuptools.packages.find]
 where = ["src"]
 
+# Native extension configuration.
+# Builds src/fastmath/_core.c as the importable fastmath._core C extension.
 [[tool.setuptools.ext-modules]]
 name = "fastmath._core"
 sources = ["src/fastmath/_core.c"]
